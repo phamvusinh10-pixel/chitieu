@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Quản Lý Chi Tiêu</title>
     
-    <!-- Cấu hình chuẩn App Điện Thoại (PWA) -->
+    <!-- Cấu hình PWA App Mobile -->
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -14,13 +14,17 @@
     <meta name="theme-color" content="#2563eb">
 
     <link rel="stylesheet" href="chitieu.css">
+
+    <!-- Thư viện Firebase Google -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 </head>
 <body>
 
 <div class="container">
     <header class="app-header">
         <h1>Quản Lý Chi Tiêu</h1>
-        <p class="subtitle">Theo dõi thu nhập và chi tiêu hiệu quả</p>
+        <p class="subtitle">Đồng bộ đám mây PC & Điện thoại</p>
     </header>
 
     <!-- Thống kê tổng quan -->
