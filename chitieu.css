@@ -1,0 +1,434 @@
+* {
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    padding: 30px 15px;
+    color: #333;
+    transition: background-color 0.8s ease;
+}
+
+/* Giao diện Ban Ngày (06:00 - 18:00) */
+body.day-mode {
+    background: linear-gradient(135deg, #e0f2fe 0%, #f0f2f5 100%);
+}
+
+/* Giao diện Ban Đêm (18:00 - 06:00) */
+body.night-mode {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: #e2e8f0;
+}
+
+.container {
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+/* Header */
+.app-header {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.app-header h1 {
+    color: #1a252f;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.app-header .subtitle {
+    color: #7f8c8d;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* Thẻ thống kê tổng quan */
+.overview {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.card {
+    padding: 14px 18px;
+    border-radius: 10px;
+    color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+}
+
+.card.income { 
+    background: linear-gradient(135deg, #10b981, #059669); 
+    border-left: 4px solid #34d399;
+}
+.card.expense { 
+    background: linear-gradient(135deg, #ef4444, #dc2626); 
+    border-left: 4px solid #f87171;
+}
+.card.balance { 
+    background: linear-gradient(135deg, #3b82f6, #2563eb); 
+    border-left: 4px solid #60a5fa;
+}
+
+.card-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    opacity: 0.85;
+    margin-bottom: 4px;
+}
+
+.card p {
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1.2;
+}
+
+/* Khung Section chung */
+.card-section {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.card-section h2 {
+    font-size: 17px;
+    margin-bottom: 18px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #edf2f7;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Phần Thêm giao dịch mới */
+.section-add {
+    border: 1px solid #cbd5e1;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.07);
+}
+
+.title-add {
+    color: #2563eb;
+    border-bottom: 2px solid #bfdbfe !important;
+}
+
+.form-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 180px;
+}
+
+.form-group.flex-grow { flex: 3; }
+.form-group.button-group { justify-content: flex-end; }
+
+label {
+    font-size: 13px;
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 6px;
+}
+
+input, select {
+    padding: 10px 14px;
+    border: 1.5px solid #94a3b8;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #fff;
+    transition: all 0.2s;
+}
+
+input:focus, select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    outline: none;
+}
+
+.btn-submit {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+    padding: 11px 20px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 14px;
+    transition: background 0.2s;
+    height: 42px;
+}
+
+.btn-submit:hover {
+    background-color: #1d4ed8;
+}
+
+/* Phần Lịch sử 3 ngày (Thu gọn + Dương lịch to + Âm lịch bên cạnh) */
+.section-recent {
+    border-top: 4px solid #f59e0b;
+    padding: 18px 24px;
+}
+
+.title-recent {
+    color: #d97706;
+}
+
+.recent-list-compact {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.recent-item-compact {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 14px;
+    background-color: #f8fafc;
+    border-radius: 8px;
+    border-left: 4px solid #cbd5e0;
+}
+
+.recent-item-compact.income { border-left-color: #10b981; }
+.recent-item-compact.expense { border-left-color: #ef4444; }
+
+.recent-left {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+/* Khối ngày số to */
+.date-badge {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: #e2e8f0;
+    border-radius: 6px;
+    min-width: 48px;
+    padding: 4px 6px;
+}
+
+.day-big {
+    font-size: 20px;
+    font-weight: 800;
+    line-height: 1;
+    color: #1e293b;
+}
+
+.month-small {
+    font-size: 10px;
+    font-weight: 700;
+    color: #64748b;
+    margin-top: 2px;
+}
+
+.recent-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.recent-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.recent-meta {
+    font-size: 11px;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.lunar-tag {
+    color: #b45309;
+    background-color: #fef3c7;
+    padding: 1px 6px;
+    border-radius: 4px;
+    font-size: 10.5px;
+    font-weight: 600;
+}
+
+.recent-amount {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.no-data-compact {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 13px;
+    padding: 10px 0;
+}
+
+/* Phần Tất cả giao dịch */
+.section-all {
+    border-top: 4px solid #0ea5e9;
+}
+
+.title-all {
+    color: #0284c7;
+}
+
+.table-responsive {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    padding: 12px;
+    text-align: left;
+    font-size: 14px;
+}
+
+th {
+    background-color: #f0f9ff;
+    color: #0369a1;
+    font-weight: 700;
+    border-bottom: 2px solid #bae6fd;
+}
+
+td {
+    border-bottom: 1px solid #e2e8f0;
+    color: #334155;
+}
+
+tr:hover td {
+    background-color: #f8fafc;
+}
+
+.amount-income {
+    color: #059669;
+    font-weight: 700;
+}
+
+.amount-expense {
+    color: #dc2626;
+    font-weight: 700;
+}
+
+.badge-type {
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.badge-type.income { background-color: #d1fae5; color: #065f46; }
+.badge-type.expense { background-color: #fee2e2; color: #991b1b; }
+
+.category-badge {
+    display: inline-block;
+    padding: 3px 10px;
+    background: #f1f5f9;
+    border-radius: 20px;
+    font-size: 12px;
+    color: #475569;
+    font-weight: 500;
+}
+
+.btn-delete {
+    background: #fef2f2;
+    color: #dc2626;
+    border: 1px solid #fca5a5;
+    padding: 5px 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 12px;
+    transition: all 0.2s;
+}
+
+.btn-delete:hover {
+    background: #dc2626;
+    color: white;
+}
+
+/* --- ĐIỀU CHỈNH CHẾ ĐỘ BAN ĐÊM (NIGHT-MODE) --- */
+body.night-mode .app-header h1 { color: #f8fafc; }
+body.night-mode .app-header .subtitle { color: #94a3b8; }
+body.night-mode .card-section { background-color: #1e293b; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+body.night-mode input, body.night-mode select { background-color: #0f172a; color: #f8fafc; border-color: #334155; }
+body.night-mode label { color: #cbd5e1; }
+body.night-mode th { background-color: #0f172a; color: #38bdf8; border-bottom-color: #334155; }
+body.night-mode td { border-bottom-color: #334155; color: #cbd5e1; }
+body.night-mode tr:hover td { background-color: #334155; }
+
+body.night-mode .recent-item-compact { background-color: #0f172a; }
+body.night-mode .recent-title { color: #f1f5f9; }
+body.night-mode .date-badge { background: #334155; }
+body.night-mode .day-big { color: #38bdf8; }
+body.night-mode .month-small { color: #94a3b8; }
+body.night-mode .lunar-tag { background-color: #78350f; color: #fef08a; }
+
+/* Responsive Điện Thoại */
+@media (max-width: 768px) {
+    .overview {
+        grid-template-columns: 1fr;
+        gap: 10px;
+    }
+    .card {
+        padding: 12px 15px;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .card-title { margin-bottom: 0; }
+    .card p { font-size: 18px; }
+    .form-row { flex-direction: column; gap: 10px; }
+    .form-group, .form-group.flex-grow { width: 100%; }
+}
+/* Tối ưu ô chọn Ngày giao dịch */
+input[type="date"] {
+    position: relative;
+    cursor: pointer;
+}
+
+/* Đổi màu icon lịch mặc định của trình duyệt */
+input[type="date"]::-webkit-calendar-picker-indicator {
+    cursor: pointer;
+    filter: invert(0.4);
+    transition: filter 0.2s;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    filter: invert(0.1);
+}
+
+/* Ban đêm: Đổi icon lịch sang màu sáng cho dễ nhìn */
+body.night-mode input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(0.8);
+}
+
+body.night-mode input[type="date"]::-webkit-calendar-picker-indicator:hover {
+    filter: invert(1);
+}

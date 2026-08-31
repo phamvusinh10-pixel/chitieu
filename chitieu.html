@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Tài Chính Cá Nhân</title>
+    <link rel="stylesheet" href="chitieu.css">
+</head>
+<body>
+
+<div class="container">
+    <header class="app-header">
+        <h1>Quản Lý Chi Tiêu</h1>
+        <p class="subtitle">Theo dõi thu nhập và chi tiêu hiệu quả</p>
+    </header>
+
+    <!-- Thống kê tổng quan -->
+    <div class="overview">
+        <div class="card income">
+            <span class="card-title">TỔNG THU</span>
+            <p id="total-income">0 đ</p>
+        </div>
+        <div class="card expense">
+            <span class="card-title">TỔNG CHI</span>
+            <p id="total-expense">0 đ</p>
+        </div>
+        <div class="card balance">
+            <span class="card-title">SỐ DƯ CÒN LẠI</span>
+            <p id="net-balance">0 đ</p>
+        </div>
+    </div>
+
+    <!-- Form nhập thông tin -->
+    <div class="card-section section-add">
+        <h2 class="title-add">Thêm Giao Dịch Mới</h2>
+        <form id="finance-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="date">Ngày giao dịch</label>
+                    <input type="date" id="date" onchange="render3DaysHistory()" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="type">Loại giao dịch</label>
+                    <select id="type" onchange="updateCategories()">
+                        <option value="expense" selected>Chi tiêu (-)</option>
+                        <option value="income">Thu nhập (+)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Danh mục</label>
+                    <select id="category" required></select>
+                </div>
+
+                <div class="form-group">
+                    <label for="amount">Số tiền (VNĐ)</label>
+                    <input type="number" id="amount" placeholder="VD: 10 (= 10.000đ)" required min="1">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group flex-grow">
+                    <label for="note">Ghi chú chi tiết</label>
+                    <input type="text" id="note" placeholder="Nhập ghi chú (vd: Cà phê sáng, Tiền lương...)">
+                </div>
+
+                <div class="form-group button-group">
+                    <button type="submit" class="btn-submit">+ Thêm Giao Dịch</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Bảng 1: Lịch sử 3 ngày gần nhất (Thu gọn & Tích hợp Âm Lịch) -->
+    <div class="card-section section-recent">
+        <h2 class="title-recent">Lịch Sử 3 Ngày Gần Nhất</h2>
+        <div id="recent-3days-list" class="recent-list-compact"></div>
+    </div>
+
+    <!-- Bảng 2: Tất cả giao dịch -->
+    <div class="card-section section-all">
+        <h2 class="title-all">Tất Cả Giao Dịch</h2>
+        <div class="table-responsive">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Ngày</th>
+                        <th>Phân loại</th>
+                        <th>Danh mục</th>
+                        <th>Số tiền</th>
+                        <th>Ghi chú</th>
+                        <th style="text-align: center;">Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="transaction-list"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script src="chitieu.js"></script>
+</body>
+</html>
