@@ -1,12 +1,11 @@
-// 1. Lấy dữ liệu từ localStorage khi mở trang, nếu chưa có thì khởi tạo mảng rỗng []
+// 1. Tự động khôi phục dữ liệu đã lưu trong máy
 let transactions = JSON.parse(localStorage.getItem('finance_transactions')) || [];
 
-// Hàm lưu mảng transactions vào localStorage
 function saveToLocalStorage() {
     localStorage.setItem('finance_transactions', JSON.stringify(transactions));
 }
 
-// 2. Tự động chuyển giao diện Ban Ngày (6h-18h) / Ban Đêm (18h-6h)
+// 2. Chuyển đổi giao diện Ban Ngày (6h-18h) / Ban Đêm (18h-6h)
 function applyDayNightTheme() {
     const hours = new Date().getHours();
     const isDayTime = hours >= 6 && hours < 18;
@@ -49,7 +48,7 @@ function updateCategories() {
         .join('');
 }
 
-// Gán ngày mặc định hôm nay theo chuẩn YYYY-MM-DD
+// Set ngày mặc định là hôm nay (YYYY-MM-DD)
 dateInput.value = new Date().toLocaleDateString('en-CA');
 updateCategories();
 
@@ -62,7 +61,7 @@ function formatDate(dateStr) {
     return `${day}/${month}/${year}`;
 }
 
-// Thuật toán chuyển đổi Dương lịch sang Âm lịch Việt Nam
+// Thuật toán tính Âm lịch Việt Nam
 function getLunarDate(day, month, year) {
     const k = Math.floor((14 - month) / 12);
     const y = year + 4800 - k;
@@ -104,14 +103,14 @@ function renderList() {
         const isIncome = t.type === 'income';
         
         row.innerHTML = `
-            <td>${formatDate(t.date)}</td>
-            <td><span class="badge-type ${isIncome ? 'income' : 'expense'}">${isIncome ? 'Thu nhập' : 'Chi tiêu'}</span></td>
-            <td><span class="category-badge">${t.category}</span></td>
-            <td class="${isIncome ? 'amount-income' : 'amount-expense'}">
+            <td data-label="Ngày">${formatDate(t.date)}</td>
+            <td data-label="Phân loại"><span class="badge-type ${isIncome ? 'income' : 'expense'}">${isIncome ? 'Thu nhập' : 'Chi tiêu'}</span></td>
+            <td data-label="Danh mục"><span class="category-badge">${t.category}</span></td>
+            <td data-label="Số tiền" class="${isIncome ? 'amount-income' : 'amount-expense'}">
                 ${isIncome ? '+' : '-'}${formatMoney(t.amount)}
             </td>
-            <td>${t.note || '-'}</td>
-            <td style="text-align: center;"><button class="btn-delete" onclick="deleteTransaction(${index})">Xóa</button></td>
+            <td data-label="Ghi chú">${t.note || '-'}</td>
+            <td data-label="" style="text-align: center;"><button class="btn-delete" onclick="deleteTransaction(${index})">Xóa</button></td>
         `;
         list.appendChild(row);
     });
@@ -187,7 +186,6 @@ function addTransaction(e) {
 
     transactions.push({ date, type, category, amount, note });
 
-    // Lưu dữ liệu mới vào bộ nhớ trình duyệt
     saveToLocalStorage();
 
     amountInput.value = '';
@@ -201,7 +199,6 @@ function addTransaction(e) {
 function deleteTransaction(index) {
     transactions.splice(index, 1);
     
-    // Cập nhật lại bộ nhớ trình duyệt sau khi xóa
     saveToLocalStorage();
 
     renderList();
@@ -211,7 +208,6 @@ function deleteTransaction(index) {
 
 form.addEventListener('submit', addTransaction);
 
-// Chạy khởi tạo lại giao diện với dữ liệu đã lưu
 renderList();
 render3DaysHistory();
 updateSummary();
