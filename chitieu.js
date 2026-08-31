@@ -1,16 +1,42 @@
-// 1. Tự động khôi phục dữ liệu đã lưu trong máy
-let transactions = JSON.parse(localStorage.getItem('finance_transactions')) || [];
+// Cấu hình Firebase cá nhân của Sinh
+const firebaseConfig = {
+    apiKey: "AIzaSyBqBW8pkfbcPYne2D5e7JDMat7qI-X3mIw",
+    authDomain: "appchitieu-ee549.firebaseapp.com",
+    databaseURL: "https://appchitieu-ee549-default-rtdb.firebaseio.com",
+    projectId: "appchitieu-ee549",
+    storageBucket: "appchitieu-ee549.firebasestorage.app",
+    messagingSenderId: "321657191566",
+    appId: "1:321657191566:web:1a5c24dbaf22001a435ddf",
+    measurementId: "G-GNE56E184V"
+};
 
-function saveToLocalStorage() {
-    localStorage.setItem('finance_transactions', JSON.stringify(transactions));
-}
+// Khởi tạo Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+const dbRef = db.ref('transactions');
 
-// 2. Chuyển đổi giao diện Ban Ngày (6h-18h) / Ban Đêm (18h-6h)
+let transactions = [];
+
+// Tự động lắng nghe và đồng bộ dữ liệu theo thời gian thực (Realtime)
+dbRef.on('value', (snapshot) => {
+    const data = snapshot.val();
+    transactions = [];
+    if (data) {
+        Object.keys(data).forEach(key => {
+            transactions.push({ id: key, ...data[key] });
+        });
+        // Sắp xếp ngày mới nhất lên đầu
+        transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+    }
+    renderList();
+    render3DaysHistory();
+    updateSummary();
+});
+
+// Chế độ Ban Ngày (6h-18h) / Ban Đêm (18h-6h)
 function applyDayNightTheme() {
     const hours = new Date().getHours();
-    const isDayTime = hours >= 6 && hours < 18;
-
-    if (isDayTime) {
+    if (hours >= 6 && hours < 18) {
         document.body.classList.add('day-mode');
         document.body.classList.remove('night-mode');
     } else {
@@ -41,14 +67,11 @@ const categories = {
 
 function updateCategories() {
     const selectedType = typeInput.value;
-    const availableCategories = categories[selectedType];
-    
-    categoryInput.innerHTML = availableCategories
+    categoryInput.innerHTML = categories[selectedType]
         .map(cat => `<option value="${cat}">${cat}</option>`)
         .join('');
 }
 
-// Set ngày mặc định là hôm nay (YYYY-MM-DD)
 dateInput.value = new Date().toLocaleDateString('en-CA');
 updateCategories();
 
@@ -61,7 +84,6 @@ function formatDate(dateStr) {
     return `${day}/${month}/${year}`;
 }
 
-// Thuật toán tính Âm lịch Việt Nam
 function getLunarDate(day, month, year) {
     const k = Math.floor((14 - month) / 12);
     const y = year + 4800 - k;
@@ -76,29 +98,22 @@ function getLunarDate(day, month, year) {
 }
 
 function updateSummary() {
-    const income = transactions
-        .filter(t => t.type === 'income')
-        .reduce((acc, t) => acc + t.amount, 0);
-
-    const expense = transactions
-        .filter(t => t.type === 'expense')
-        .reduce((acc, t) => acc + t.amount, 0);
-
-    const balance = income - expense;
+    const income = transactions.filter(t => t.type === 'income').reduce((acc, t) => acc + t.amount, 0);
+    const expense = transactions.filter(t => t.type === 'expense').reduce((acc, t) => acc + t.amount, 0);
 
     totalIncomeEl.innerText = formatMoney(income);
     totalExpenseEl.innerText = formatMoney(expense);
-    netBalanceEl.innerText = formatMoney(balance);
+    netBalanceEl.innerText = formatMoney(income - expense);
 }
 
 function renderList() {
     list.innerHTML = '';
     if (transactions.length === 0) {
-        list.innerHTML = `<tr><td colspan="6" style="text-align:center; color: #a0aec0; padding: 20px;">Chưa có giao dịch nào được tạo</td></tr>`;
+        list.innerHTML = `<tr><td colspan="6" style="text-align:center; color: #a0aec0; padding: 20px;">Chưa có giao dịch nào</td></tr>`;
         return;
     }
 
-    transactions.forEach((t, index) => {
+    transactions.forEach((t) => {
         const row = document.createElement('tr');
         const isIncome = t.type === 'income';
         
@@ -110,7 +125,7 @@ function renderList() {
                 ${isIncome ? '+' : '-'}${formatMoney(t.amount)}
             </td>
             <td data-label="Ghi chú">${t.note || '-'}</td>
-            <td data-label="" style="text-align: center;"><button class="btn-delete" onclick="deleteTransaction(${index})">Xóa</button></td>
+            <td data-label="" style="text-align: center;"><button class="btn-delete" onclick="deleteTransaction('${t.id}')">Xóa</button></td>
         `;
         list.appendChild(row);
     });
@@ -118,7 +133,6 @@ function renderList() {
 
 function render3DaysHistory() {
     recentList.innerHTML = '';
-    
     const selectedDateVal = dateInput.value;
     const anchorDate = selectedDateVal ? new Date(selectedDateVal) : new Date();
     
@@ -135,7 +149,7 @@ function render3DaysHistory() {
     });
 
     if (recentTransactions.length === 0) {
-        recentList.innerHTML = `<div class="no-data-compact">Không có giao dịch nào trong 3 ngày quanh mốc đã chọn</div>`;
+        recentList.innerHTML = `<div class="no-data-compact">Không có giao dịch trong 3 ngày quanh mốc đã chọn</div>`;
         return;
     }
 
@@ -184,30 +198,15 @@ function addTransaction(e) {
         amount = amount * 1000;
     }
 
-    transactions.push({ date, type, category, amount, note });
-
-    saveToLocalStorage();
+    // Gửi lên Firebase
+    dbRef.push({ date, type, category, amount, note });
 
     amountInput.value = '';
     noteInput.value = '';
-
-    renderList();
-    render3DaysHistory();
-    updateSummary();
 }
 
-function deleteTransaction(index) {
-    transactions.splice(index, 1);
-    
-    saveToLocalStorage();
-
-    renderList();
-    render3DaysHistory();
-    updateSummary();
+function deleteTransaction(id) {
+    db.ref('transactions/' + id).remove();
 }
 
 form.addEventListener('submit', addTransaction);
-
-renderList();
-render3DaysHistory();
-updateSummary();
