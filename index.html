@@ -2,8 +2,17 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quản Lý Tài Chính Cá Nhân</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Quản Lý Chi Tiêu</title>
+    
+    <!-- Cấu hình hiển thị chuẩn App trên Điện thoại -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Chi Tiêu">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#2563eb">
+
     <link rel="stylesheet" href="chitieu.css">
 </head>
 <body>
@@ -55,14 +64,14 @@
 
                 <div class="form-group">
                     <label for="amount">Số tiền (VNĐ)</label>
-                    <input type="number" id="amount" placeholder="VD: 10 (= 10.000đ)" required min="1">
+                    <input type="number" id="amount" placeholder="VD: 10 (= 10.000đ)" inputmode="numeric" required min="1">
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group flex-grow">
                     <label for="note">Ghi chú chi tiết</label>
-                    <input type="text" id="note" placeholder="Nhập ghi chú (vd: Cà phê sáng, Tiền lương...)">
+                    <input type="text" id="note" placeholder="Nhập ghi chú (vd: Cà phê, Lương...)">
                 </div>
 
                 <div class="form-group button-group">
@@ -72,7 +81,7 @@
         </form>
     </div>
 
-    <!-- Bảng 1: Lịch sử 3 ngày gần nhất (Thu gọn & Tích hợp Âm Lịch) -->
+    <!-- Bảng 1: Lịch sử 3 ngày gần nhất -->
     <div class="card-section section-recent">
         <h2 class="title-recent">Lịch Sử 3 Ngày Gần Nhất</h2>
         <div id="recent-3days-list" class="recent-list-compact"></div>
