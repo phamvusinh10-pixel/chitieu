@@ -269,11 +269,10 @@ td { border-bottom: 1px solid #e2e8f0; color: #334155; }
     font-size: 12px;
 }
 
-/* --- TỐI ƯU GIAO DIỆN ĐIỆN THOẠI (Mobile Responsive Rules) --- */
+/* --- TỐI ƯU GIAO DIỆN ĐIỆN THOẠI (Mobile) --- */
 @media (max-width: 640px) {
     body { padding: 10px 8px; }
 
-    /* Xếp dọc 3 thẻ thống kê trên màn hình nhỏ */
     .overview {
         grid-template-columns: 1fr;
         gap: 8px;
@@ -288,13 +287,11 @@ td { border-bottom: 1px solid #e2e8f0; color: #334155; }
 
     .card p { font-size: 17px; }
 
-    /* Form xếp dọc 1 cột dễ bấm */
     .form-row { flex-direction: column; gap: 10px; }
     .form-group { width: 100%; min-width: 100%; }
     
-    /* Chuyển Bảng danh sách thành dạng Thẻ (Cards) trên di động */
     table, thead, tbody, th, td, tr { display: block; }
-    thead { display: none; } /* Ẩn tiêu đề bảng */
+    thead { display: none; }
 
     tr {
         background: #f8fafc;
