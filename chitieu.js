@@ -194,9 +194,8 @@ function addTransaction(e) {
 
     if (!date || isNaN(amount) || amount <= 0) return;
 
-    if (amount < 1000) {
-        amount = amount * 1000;
-    }
+    // Tự động thêm 3 số 0 (nhân với 1000) cho mọi giá trị nhập vào
+    amount = amount * 1000;
 
     // Gửi lên Firebase
     dbRef.push({ date, type, category, amount, note });
